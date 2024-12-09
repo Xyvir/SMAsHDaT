@@ -110,4 +110,83 @@
         let savedText2 = "";
 
         document.querySelectorAll('input[name="mode"]').forEach((radio) => {
-            radio
+            radio.addEventListener('change', function() {
+                switchMode(this.value);
+            });
+        });
+
+        function switchMode(mode) {
+            const todoList = document.getElementById('todo-list');
+            const editField1 = document.getElementById('edit-field-1');
+            const editField2 = document.getElementById('edit-field-2');
+
+            if (mode === 'track') {
+                savedText1 = editField1.value;
+                savedText2 = editField2.value;
+
+                const lines1 = savedText1.split('\n');
+                const lines2 = savedText2.split('\n');
+
+                todoList.innerHTML = '';
+
+                createTrackColumn(lines1, todoList);
+                createTrackColumn(lines2, todoList);
+            } else {
+                todoList.innerHTML = `
+                    <div class="textarea-container"><textarea id="edit-field-1" rows="10" cols="50"></textarea></div>
+                    <div class="textarea-container"><textarea id="edit-field-2" rows="10" cols="50"></textarea></div>
+                `;
+                document.getElementById('edit-field-1').value = savedText1;
+                document.getElementById('edit-field-2').value = savedText2;
+            }
+        }
+
+        function createTrackColumn(lines, parent) {
+            const column = document.createElement('div');
+            column.className = 'textarea-container';
+            lines.forEach(line => {
+                const match = line.match(/^(\d+)\s*(.*)$/);
+                const listItem = document.createElement('div');
+                listItem.className = 'todo-item left-justify';
+                if (match) {
+                    const count = parseInt(match[1]);
+                    const text = match[2];
+                    const checkboxes = document.createElement('span');
+
+                    for (let i = 0; i < count; i++) {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.addEventListener('change', function() {
+                            checkCompletion(listItem, count);
+                        });
+                        checkboxes.appendChild(checkbox);
+                    }
+
+                    const itemText = document.createElement('span');
+                    itemText.textContent = text;
+                    listItem.appendChild(checkboxes);
+                    listItem.appendChild(itemText);
+                } else {
+                    const itemText = document.createElement('span');
+                    itemText.className = 'bold-text';
+                    itemText.textContent = line;
+                    listItem.appendChild(itemText);
+                }
+                column.appendChild(listItem);
+            });
+            parent.appendChild(column);
+        }
+
+        function checkCompletion(listItem, count) {
+            const checkboxes = listItem.querySelectorAll('input[type="checkbox"]');
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+            if (allChecked) {
+                listItem.querySelector('span:last-child').classList.add('strike-through');
+            } else {
+                listItem.querySelector('span:last-child').classList.remove('strike-through');
+            }
+        }
+    </script>
+</body>
+</html>
