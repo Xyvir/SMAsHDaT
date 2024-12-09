@@ -18,6 +18,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            white-space: pre;
         }
         textarea {
             width: 100%;
@@ -28,6 +29,7 @@
             border: none;
             padding: 10px;
             font-size: 16px;
+            white-space: pre-wrap;
         }
         textarea:focus {
             outline: none;
@@ -70,6 +72,13 @@
         input[type="checkbox"] {
             margin-right: 5px;
         }
+        .left-justify {
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .bold-text {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -102,10 +111,11 @@
 
                 lines.forEach(line => {
                     const match = line.match(/^(\d+)\s*(.*)$/);
+                    const listItem = document.createElement('div');
+                    listItem.className = 'left-justify';
                     if (match) {
                         const count = parseInt(match[1]);
                         const text = match[2];
-                        const listItem = document.createElement('div');
                         const checkboxes = document.createElement('span');
 
                         for (let i = 0; i < count; i++) {
@@ -121,8 +131,13 @@
                         itemText.textContent = text;
                         listItem.appendChild(checkboxes);
                         listItem.appendChild(itemText);
-                        todoList.appendChild(listItem);
+                    } else {
+                        const itemText = document.createElement('span');
+                        itemText.className = 'bold-text';
+                        itemText.textContent = line;
+                        listItem.appendChild(itemText);
                     }
+                    todoList.appendChild(listItem);
                 });
             } else {
                 todoList.innerHTML = '<textarea id="edit-field" rows="10" cols="50"></textarea>';
