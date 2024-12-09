@@ -14,11 +14,16 @@
             color: #ffffff;
             font-family: Arial, sans-serif;
         }
-        #todo-list {
+        #todo-list-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            white-space: pre;
+            overflow-y: auto;
+        }
+        #todo-list {
+            flex: 1;
+            white-space: pre-wrap;
+            padding: 10px;
         }
         textarea {
             width: 100%;
@@ -50,31 +55,27 @@
             text-decoration: line-through;
             color: #757575;
         }
-        div {
+        .mode-selector {
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        label {
+        .mode-selector label {
             margin: 0 10px;
         }
-        div div {
+        .todo-item {
             display: flex;
-            flex-direction: row;
-            margin-top: 10px;
-        }
-        #todo-list div {
+            align-items: center;
             margin: 5px 0;
         }
-        #todo-list span {
+        .todo-item span {
             margin-right: 10px;
         }
-        input[type="checkbox"] {
+        .todo-item input[type="checkbox"] {
             margin-right: 5px;
         }
         .left-justify {
-            justify-content: flex-start;
-            align-items: flex-start;
+            text-align: left;
         }
         .bold-text {
             font-weight: bold;
@@ -84,12 +85,14 @@
 <body>
     <h1>SMAsHDaT</h1>
     <h2 class="subtitle">Stupid MAnual HTML-based Deck Tracker</h2>
-    <div>
+    <div class="mode-selector">
         <label><input type="radio" name="mode" value="edit" checked>Edit</label>
         <label><input type="radio" name="mode" value="track">Track</label>
     </div>
-    <div id="todo-list">
-        <textarea id="edit-field" rows="10" cols="50"></textarea>
+    <div id="todo-list-container">
+        <div id="todo-list">
+            <textarea id="edit-field" rows="10" cols="50"></textarea>
+        </div>
     </div>
     <script>
         let savedText = "";
@@ -101,6 +104,7 @@
         });
 
         function switchMode(mode) {
+            const todoListContainer = document.getElementById('todo-list-container');
             const todoList = document.getElementById('todo-list');
             const editField = document.getElementById('edit-field');
 
@@ -112,7 +116,7 @@
                 lines.forEach(line => {
                     const match = line.match(/^(\d+)\s*(.*)$/);
                     const listItem = document.createElement('div');
-                    listItem.className = 'left-justify';
+                    listItem.className = 'todo-item left-justify';
                     if (match) {
                         const count = parseInt(match[1]);
                         const text = match[2];
