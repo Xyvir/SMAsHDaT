@@ -3,15 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List App</title>
+    <title>SMAsHDaT</title>
     <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        #todo-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+        }
+        textarea:focus {
+            outline: none;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 10px;
+        }
+        h2.subtitle {
+            text-align: center;
+            color: gray;
+            margin-top: 5px;
+        }
+        input[type="radio"] {
+            margin: 0 5px;
+        }
         .strike-through {
             text-decoration: line-through;
+            color: #757575;
+        }
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        label {
+            margin: 0 10px;
+        }
+        div div {
+            display: flex;
+            flex-direction: row;
+            margin-top: 10px;
+        }
+        #todo-list div {
+            margin: 5px 0;
+        }
+        #todo-list span {
+            margin-right: 10px;
+        }
+        input[type="checkbox"] {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Todo List App</h1>
+    <h1>SMAsHDaT</h1>
+    <h2 class="subtitle">Stupid MAnual HTML-based Deck Tracker</h2>
     <div>
         <label><input type="radio" name="mode" value="edit" checked>Edit</label>
         <label><input type="radio" name="mode" value="track">Track</label>
@@ -20,6 +83,8 @@
         <textarea id="edit-field" rows="10" cols="50"></textarea>
     </div>
     <script>
+        let savedText = "";
+
         document.querySelectorAll('input[name="mode"]').forEach((radio) => {
             radio.addEventListener('change', function() {
                 switchMode(this.value);
@@ -31,7 +96,8 @@
             const editField = document.getElementById('edit-field');
 
             if (mode === 'track') {
-                const lines = editField.value.split('\n');
+                savedText = editField.value;
+                const lines = savedText.split('\n');
                 todoList.innerHTML = '';
 
                 lines.forEach(line => {
@@ -60,6 +126,7 @@
                 });
             } else {
                 todoList.innerHTML = '<textarea id="edit-field" rows="10" cols="50"></textarea>';
+                document.getElementById('edit-field').value = savedText;
             }
         }
 
